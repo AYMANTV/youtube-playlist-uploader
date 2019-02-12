@@ -23,7 +23,7 @@
     "husky": {
         "hooks": {
             "pre-commit": "yarn prettier && git add -A :/",
-            "pre-push": "yarn test"
+            "pre-push": "yarn build"
         }
     },
     "eslintConfig": {
