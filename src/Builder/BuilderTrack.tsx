@@ -1,12 +1,18 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import YouTube from 'react-youtube';
-import { Track } from '../shared/Uploader/Uploader';
-import yt, { SearchResult } from '../shared/youtube/youtube.service';
-import Button from '../shared/Button/Button';
+import yt, { YTSearchResult } from '../shared/services/youtube/youtube.service';
+import Button from '../shared/components/Button/Button';
+import { Track } from '../shared/models/track';
+import AppContext from '../App/AppContext';
 
 export interface BuilderTrackProps {
+    index: number;
+    isActive: boolean;
+    isComplete: boolean;
     track: Track;
+    setActiveTrack: (t: number) => void;
+    setTrackVideoId: (t: number, id: string) => void;
+    setVideoPreviewId: (id: string) => void;
 }
 
 const BTrack = styled.div`
@@ -15,47 +21,64 @@ const BTrack = styled.div`
 
 const BTrackLabel = styled.span``;
 
-function useSearch(track: Track, defaultResults: SearchResult[] = []) {
+function useSearch(track: Track, isActive: boolean, defaultResults: YTSearchResult[] = []) {
     const [results, updateResults] = useState(defaultResults);
     const search = async (t: Track) => {
-        const r = await yt.search(`${track.artist} ${track.name} ${track.album}`);
-        updateResults(results);
+        const r = await yt.search(`${t.artist} ${t.name} ${t.album}`);
+        updateResults(r);
     };
     useEffect(() => {
-        search(track);
-    }, [track]);
+        if (isActive) search(track);
+    }, [track, isActive]);
 
     return results;
 }
 
-export default (props: BuilderTrackProps) => {
-    const { track } = props;
-    const results = useSearch(track);
-    const [videoId, updateVideoId] = useState(null);
-
-    // @todo: what's going on with this `any` typing?
-    const onPreviewClick = (r: SearchResult): any => (e: MouseEvent) => {
-        e.preventDefault();
-        updateVideoId(r.id);
-    };
-
-    const onUseClick = res => console.log(res);
+export const BuilderTrackComponent = (props: BuilderTrackProps) => {
+    const { track, isActive, isComplete, setActiveTrack, setVideoPreviewId, setTrackVideoId, index } = props;
+    const results = useSearch(track, isActive);
+    const onTrackClick = () => setActiveTrack(index);
+    const onPreviewClick = (r: YTSearchResult) => () => setVideoPreviewId(r.id);
+    const onUseClick = (r: YTSearchResult) => () => setTrackVideoId(index, r.id);
 
     return (
         <BTrack>
             <h2>
-                {track.artist} - {track.name}
+                <a onClick={onTrackClick}>
+                    {track.artist} - {track.name}
+                </a>
+                {isComplete && <i>√</i>}
             </h2>
             <ul>
-                {results.map(r => (
-                    <li key={r.id} title={r.description}>
-                        <BTrackLabel>{r.title}</BTrackLabel>
-                        <Button onClick={onPreviewClick(r)} label="Preview" />
-                        <Button onClick={onUseClick} label="Use" />
-                    </li>
-                ))}
+                {isActive &&
+                    results.map(r => (
+                        <li key={r.id} title={r.description}>
+                            <BTrackLabel>{r.title}</BTrackLabel>
+                            <Button onClick={onPreviewClick(r)} label="Preview" />
+                            <Button onClick={onUseClick(r)} label="Use" />
+                        </li>
+                    ))}
             </ul>
-            {videoId && <YouTube videoId={videoId} />}
         </BTrack>
     );
 };
+
+export interface BuilderTrackMapProps {
+    index: number;
+    track: Track;
+}
+
+export const mapContextToProps = (p: BuilderTrackMapProps): BuilderTrackProps => {
+    const c = useContext(AppContext);
+    return {
+        index: p.index,
+        isActive: p.index === c.activeTrack,
+        isComplete: c.videoIds[p.index] ? true : false,
+        setActiveTrack: (t: number) => c.setContext({ activeTrack: t }),
+        setTrackVideoId: (t: number, id: string) => c.setContext({ videoIds: { ...c.videoIds, [t]: id } }),
+        setVideoPreviewId: (id: string) => c.setContext({ videoPreviewId: id }),
+        track: p.track
+    };
+};
+
+export default (p: BuilderTrackMapProps) => <BuilderTrackComponent {...mapContextToProps(p)} />;

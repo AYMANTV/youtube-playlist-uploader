@@ -9,6 +9,7 @@
         "no-conditional-assignment": false,
         "no-console": false,
         "no-empty": false,
+        "no-empty-interface": false,
         "ordered-imports": false,
         "variable-name": false
     },

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Uploader from './Uploader';
-import XML from '../test/playlist-xml';
+import XML from '../../test/playlist-xml';
 
 configure({ adapter: new Adapter() });
 

@@ -1,6 +1,6 @@
 import { parseXML, ParsedXMLNode } from './xml-parser';
 import { TagKeyName } from './Uploader.model';
-import XML from '../test/playlist-xml';
+import XML from '../../test/playlist-xml';
 
 describe('XML Parser', () => {
     let data;

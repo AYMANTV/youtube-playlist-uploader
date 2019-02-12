@@ -4,8 +4,8 @@ import Button from './Button';
 
 describe('Button', () => {
     it('renders without crashing', () => {
-      const div = document.createElement('div');
-      ReactDOM.render(<Button />, div);
-      ReactDOM.unmountComponentAtNode(div);
+        const div = document.createElement('div');
+        ReactDOM.render(<Button />, div);
+        ReactDOM.unmountComponentAtNode(div);
     });
-})
+});

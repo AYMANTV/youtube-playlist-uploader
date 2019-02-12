@@ -4,28 +4,21 @@ import styled from 'styled-components';
 
 import Input, { InputType } from '../Input/Input';
 import Field from '../Field/Field';
-import Button from '../Button/Button';
+import Button, { ButtonType } from '../Button/Button';
 import { TagKeyName } from './Uploader.model';
 import { parseXML } from './xml-parser';
+import { Tracks } from '../../models/track';
 
 export interface UploaderProps {
     className?: string;
     label: string;
-    onSubmit: (playlist: Playlist) => void;
+    onSubmit: (playlist: Tracks) => void;
 }
 
 export interface UploaderState {
     file?: string;
     loading?: boolean;
 }
-
-export interface Track {
-    album?: string;
-    artist: string;
-    name: string;
-}
-
-export type Playlist = Track[];
 
 const Form = styled.form`
     border: none;
@@ -50,7 +43,7 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
             <Form className={classnames('uploader', className)} onSubmit={this.onSubmit}>
                 <Field label={label}>
                     <Input onChange={this.onInputChange} type={InputType.File} />
-                    <Button label="Upload" disabled={loading} />
+                    <Button label="Upload" disabled={loading} type={ButtonType.Submit} />
                 </Field>
             </Form>
         );
@@ -73,7 +66,7 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
         this.setState({ file: null });
     }
 
-    public async parsePlaylist(): Promise<Playlist> {
+    public async parsePlaylist(): Promise<Tracks> {
         return new Promise((res, rej) => {
             const data = parseXML(this.state.file);
             const tracks = data.get(TagKeyName.Tracks);
@@ -108,7 +101,11 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
     public async onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const { onSubmit } = this.props;
-        const playlist = await this.parsePlaylist();
-        onSubmit(playlist);
+        try {
+            const playlist = await this.parsePlaylist();
+            onSubmit(playlist);
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
