@@ -1,5 +1,3 @@
-import { VideoIds } from '../../../App/AppContext';
-
 // Client ID and API key from the Developer Console
 const CLIENT_ID = process.env.REACT_APP_YOUTUBE_CLIENT_ID;
 
@@ -159,14 +157,10 @@ export class YouTubeService {
         });
     }
 
-    public async addTracks(playlistId: string, videoIds: VideoIds): Promise<YTPlaylistItem[]> {
+    public async addTracks(playlistId: string, videoIds: string[]): Promise<YTPlaylistItem[]> {
         return new Promise(async (res, rej) => {
             try {
-                Promise.all(
-                    Object.keys(videoIds)
-                        .filter(id => videoIds[id])
-                        .map(id => this.addTrack(playlistId, id))
-                )
+                Promise.all(videoIds.map(id => this.addTrack(playlistId, id)))
                     .then(res)
                     .catch(rej);
             } catch (e) {
@@ -199,7 +193,7 @@ export class YouTubeService {
     }
 
     public async savePlaylist(
-        ids: VideoIds,
+        ids: string[],
         title: string = '',
         description: string = '',
         privacyStatus: PrivacyStatus = PrivacyStatus.Private

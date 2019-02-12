@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import yt, { YTSearchResult } from '../shared/services/youtube/youtube.service';
+import yt, { YTSearchResult } from '../YouTube/youtube.service';
 import Button from '../shared/components/Button/Button';
 import { Track } from '../shared/models/track';
 import AppContext from '../App/AppContext';

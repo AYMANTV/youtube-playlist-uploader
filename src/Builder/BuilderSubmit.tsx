@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
+import yt from '../YouTube/youtube.service';
 
 import AppContext, { VideoIds } from '../App/AppContext';
 import Button from '../shared/components/Button/Button';
-import yt from '../shared/services/youtube/youtube.service';
 
 export interface BuilderSubmitProps {
     videoIds: VideoIds;
@@ -10,7 +10,7 @@ export interface BuilderSubmitProps {
 
 export const BuilderSubmitComponent = (props: BuilderSubmitProps) => {
     const { videoIds } = props;
-    const savePlaylist = () => yt.savePlaylist(videoIds, 'Test', 'Testing123');
+    const savePlaylist = () => yt.savePlaylist(Object.keys(videoIds).filter(id => videoIds[id]), 'Test', 'Testing123');
     return <Button label="Save Playlist to YouTube" onClick={savePlaylist} />;
 };
 
