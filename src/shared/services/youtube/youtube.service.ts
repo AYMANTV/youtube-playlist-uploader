@@ -1,4 +1,3 @@
-import { Tracks } from '../../models/track';
 import { VideoIds } from '../../../App/AppContext';
 
 // Client ID and API key from the Developer Console
