@@ -15,16 +15,16 @@ export interface SearchResult {
     thumbnail: string;
 }
 export class YouTubeService {
+    public isSignedIn = false;
     private api;
     private initialized = false;
     private queuedActions = [];
-    public isSignedIn = false;
 
     constructor() {
         this.init();
     }
 
-    async init() {
+    public async init() {
         try {
             await this.loadLibrary();
             await this.initLibrary();
@@ -35,7 +35,7 @@ export class YouTubeService {
         }
     }
 
-    async loadLibrary(): Promise<void> {
+    public async loadLibrary(): Promise<void> {
         return new Promise((res, rej) => {
             const script = document.createElement('script');
             script.onload = () => {
@@ -48,7 +48,7 @@ export class YouTubeService {
         });
     }
 
-    async initLibrary(): Promise<void> {
+    public async initLibrary(): Promise<void> {
         return new Promise((res, rej) => {
             try {
                 this.api.load('client:auth2', async () => {
@@ -61,12 +61,12 @@ export class YouTubeService {
         });
     }
 
-    async initClient(): Promise<void> {
+    public async initClient(): Promise<void> {
         return new Promise(async (res, rej) => {
             await this.api.client
                 .init({
-                    discoveryDocs: DISCOVERY_DOCS,
                     clientId: CLIENT_ID,
+                    discoveryDocs: DISCOVERY_DOCS,
                     scope: SCOPES
                 })
                 .catch(rej);
@@ -82,7 +82,7 @@ export class YouTubeService {
         });
     }
 
-    async search(str: string): Promise<SearchResult[]> {
+    public async search(str: string): Promise<SearchResult[]> {
         return new Promise(async (res, rej) => {
             try {
                 if (!this.initialized) {
@@ -91,18 +91,18 @@ export class YouTubeService {
                 }
 
                 const resp = await this.api.client.youtube.search.list({
-                    part: 'snippet',
                     maxResults: '25',
+                    part: 'snippet',
                     q: str,
                     type: 'video'
                 });
 
                 res(
                     resp.result.items.map(i => ({
-                        id: i.id.videoId,
-                        title: i.snippet.title,
                         description: i.snippet.description,
-                        thumbnail: i.snippet.thumbnails.high.url
+                        id: i.id.videoId,
+                        thumbnail: i.snippet.thumbnails.high.url,
+                        title: i.snippet.title
                     }))
                 );
             } catch (e) {

@@ -1,12 +1,12 @@
-import { parse, ParsedXMLNode } from './parser';
+import { parseXML, ParsedXMLNode } from './xml-parser';
 import { TagKeyName } from './Uploader.model';
-import XML from '../shared/test/playlist-xml';
+import XML from '../test/playlist-xml';
 
 describe('XML Parser', () => {
     let data;
 
     beforeEach(() => {
-        data = parse(XML);
+        data = parseXML(XML);
     });
 
     it('parses XML', () => {

@@ -1,4 +1,4 @@
-import parseXml from '@rgrove/parse-xml';
+import _parseXml from '@rgrove/parse-xml';
 import { Tag, TagKeyName } from './Uploader.model';
 
 function findRecursive(children, key) {
@@ -17,20 +17,12 @@ function findRecursive(children, key) {
 }
 
 export class ParsedXMLNode {
-    name: Tag;
-    attributes: object;
-    parent?: ParsedXMLNode;
-    children?: ParsedXMLNode[];
-    text?: string;
-    type: string;
-    get(key: TagKeyName): any {
-        const match = findRecursive(this.children, key);
-        if (!match) {
-            return null;
-        }
-        const matchIndex = match.parent.parent.children.indexOf(match.parent);
-        return match.parent.parent.children[matchIndex + 1];
-    }
+    public name: Tag;
+    public attributes: object;
+    public parent?: ParsedXMLNode;
+    public children?: ParsedXMLNode[];
+    public text?: string;
+    public type: string;
 
     constructor(node, parent = null) {
         this.name = node.name;
@@ -42,9 +34,18 @@ export class ParsedXMLNode {
             .filter(c => (c.text ? c.text.trim().replace(/[\\n\\t]{1,}/g, '') !== '' : true))
             .map(c => new ParsedXMLNode(c, this));
     }
+
+    public get(key: TagKeyName): any {
+        const match = findRecursive(this.children, key);
+        if (!match) {
+            return null;
+        }
+        const matchIndex = match.parent.parent.children.indexOf(match.parent);
+        return match.parent.parent.children[matchIndex + 1];
+    }
 }
 
-export function parse(xml: string): ParsedXMLNode {
-    const data = parseXml(xml);
+export function parseXML(xml: string): ParsedXMLNode {
+    const data = _parseXml(xml);
     return new ParsedXMLNode(data.children.find(c => c.name === Tag.Playlist));
 }

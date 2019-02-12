@@ -3,22 +3,23 @@ import ReactDOM from 'react-dom';
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Uploader from './Uploader';
-import XML from '../shared/test/playlist-xml';
+import XML from '../test/playlist-xml';
 
 configure({ adapter: new Adapter() });
 
 describe('Uploader', () => {
     let wrapper;
     let component: Uploader;
+    const noop = () => {};
 
     beforeEach(() => {
-        wrapper = shallow(<Uploader label="test" onSubmit={() => {}} />);
+        wrapper = shallow(<Uploader label="test" onSubmit={noop} />);
         component = wrapper.instance();
     });
 
     it('renders without crashing', () => {
         const div = document.createElement('div');
-        ReactDOM.render(<Uploader label="test" onSubmit={() => {}} />, div);
+        ReactDOM.render(<Uploader label="test" onSubmit={noop} />, div);
         ReactDOM.unmountComponentAtNode(div);
     });
 

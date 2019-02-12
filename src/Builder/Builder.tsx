@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Playlist } from '../Uploader/Uploader';
+import { Playlist } from '../shared/Uploader/Uploader';
 import BuilderTrack from './BuilderTrack';
 
 export interface BuilderProps {

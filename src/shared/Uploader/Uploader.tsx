@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import styled from 'styled-components';
 
-import Input, { InputType } from '../shared/Input/Input';
-import Field from '../shared/Field/Field';
-import Button from '../shared/Button/Button';
-import { Tag, TagKeyName } from './Uploader.model';
-import { parse } from './parser';
+import Input, { InputType } from '../Input/Input';
+import Field from '../Field/Field';
+import Button from '../Button/Button';
+import { TagKeyName } from './Uploader.model';
+import { parseXML } from './xml-parser';
 
 export interface UploaderProps {
+    className?: string;
     label: string;
     onSubmit: (playlist: Playlist) => void;
-    className?: string;
 }
 
 export interface UploaderState {
@@ -20,9 +20,9 @@ export interface UploaderState {
 }
 
 export interface Track {
-    name: string;
-    artist: string;
     album?: string;
+    artist: string;
+    name: string;
 }
 
 export type Playlist = Track[];
@@ -42,7 +42,7 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    render = () => {
+    public render = () => {
         const { className, label } = this.props;
         const { loading } = this.state;
 
@@ -56,7 +56,7 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
         );
     };
 
-    async storeFile(file: File): Promise<string> {
+    public async storeFile(file: File): Promise<string> {
         return new Promise((res, rej) => {
             const reader = new FileReader();
             reader.onload = t => {
@@ -69,13 +69,13 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
         });
     }
 
-    clearFile() {
+    public clearFile() {
         this.setState({ file: null });
     }
 
-    async parsePlaylist(): Promise<Playlist> {
+    public async parsePlaylist(): Promise<Playlist> {
         return new Promise((res, rej) => {
-            const data = parse(this.state.file);
+            const data = parseXML(this.state.file);
             const tracks = data.get(TagKeyName.Tracks);
             const playlist = data.get(TagKeyName.PlaylistItems).children;
             try {
@@ -84,9 +84,9 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
                         const id = item.children[1].children[0].text;
                         const track = tracks.get(id);
                         return {
+                            album: track.get(TagKeyName.Album).children[0].text,
                             artist: track.get(TagKeyName.Artist).children[0].text,
-                            name: track.get(TagKeyName.Name).children[0].text,
-                            album: track.get(TagKeyName.Album).children[0].text
+                            name: track.get(TagKeyName.Name).children[0].text
                         };
                     })
                 );
@@ -96,7 +96,7 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
         });
     }
 
-    onInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    public onInputChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files && e.target.files[0];
         if (file) {
             this.storeFile(file);
@@ -105,7 +105,7 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
         }
     }
 
-    async onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    public async onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const { onSubmit } = this.props;
         const playlist = await this.parsePlaylist();

@@ -1,8 +1,8 @@
 import React, { Component, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import YouTube from 'react-youtube';
-import { Track } from '../Uploader/Uploader';
-import yt, { SearchResult } from '../shared/youtube.service';
+import { Track } from '../shared/Uploader/Uploader';
+import yt, { SearchResult } from '../shared/youtube/youtube.service';
 import Button from '../shared/Button/Button';
 
 export interface BuilderTrackProps {
@@ -18,7 +18,7 @@ const BTrackLabel = styled.span``;
 function useSearch(track: Track, defaultResults: SearchResult[] = []) {
     const [results, updateResults] = useState(defaultResults);
     const search = async (t: Track) => {
-        const results = await yt.search(`${track.artist} ${track.name} ${track.album}`);
+        const r = await yt.search(`${track.artist} ${track.name} ${track.album}`);
         updateResults(results);
     };
     useEffect(() => {
@@ -39,6 +39,8 @@ export default (props: BuilderTrackProps) => {
         updateVideoId(r.id);
     };
 
+    const onUseClick = res => console.log(res);
+
     return (
         <BTrack>
             <h2>
@@ -49,7 +51,7 @@ export default (props: BuilderTrackProps) => {
                     <li key={r.id} title={r.description}>
                         <BTrackLabel>{r.title}</BTrackLabel>
                         <Button onClick={onPreviewClick(r)} label="Preview" />
-                        <Button onClick={r => console.log(r)} label="Use" />
+                        <Button onClick={onUseClick} label="Use" />
                     </li>
                 ))}
             </ul>
