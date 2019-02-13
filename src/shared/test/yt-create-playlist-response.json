@@ -1,0 +1,46 @@
+{
+    "kind": "youtube#playlist",
+    "etag": "\"XpPGQXPnxQJhLgs6enD_n8JR4Qk/WhrGihfp6BcvCdi8iqOMa71QqJw\"",
+    "id": "PLP0rQEf9J0Ei6SNN1kXPps0MhJOLEJcUw",
+    "snippet": {
+        "publishedAt": "2019-02-13T18:56:10.000Z",
+        "channelId": "UC_fr0znWEN8SqThK80z1qyw",
+        "title": "Test",
+        "description": "Testing123",
+        "thumbnails": {
+            "default": { "url": "http://s.ytimg.com/yts/img/no_thumbnail-vfl4t3-4R.jpg", "width": 120, "height": 90 },
+            "medium": { "url": "http://s.ytimg.com/yts/img/no_thumbnail-vfl4t3-4R.jpg", "width": 320, "height": 180 },
+            "high": { "url": "http://s.ytimg.com/yts/img/no_thumbnail-vfl4t3-4R.jpg", "width": 480, "height": 360 }
+        },
+        "channelTitle": "Drew Loomer",
+        "localized": { "title": "Test", "description": "Testing123" }
+    },
+    "status": { "privacyStatus": "private" },
+    "result": {
+        "kind": "youtube#playlist",
+        "etag": "\"XpPGQXPnxQJhLgs6enD_n8JR4Qk/WhrGihfp6BcvCdi8iqOMa71QqJw\"",
+        "id": "PLP0rQEf9J0Ei6SNN1kXPps0MhJOLEJcUw",
+        "snippet": {
+            "publishedAt": "2019-02-13T18:56:10.000Z",
+            "channelId": "UC_fr0znWEN8SqThK80z1qyw",
+            "title": "Test",
+            "description": "Testing123",
+            "thumbnails": {
+                "default": {
+                    "url": "http://s.ytimg.com/yts/img/no_thumbnail-vfl4t3-4R.jpg",
+                    "width": 120,
+                    "height": 90
+                },
+                "medium": {
+                    "url": "http://s.ytimg.com/yts/img/no_thumbnail-vfl4t3-4R.jpg",
+                    "width": 320,
+                    "height": 180
+                },
+                "high": { "url": "http://s.ytimg.com/yts/img/no_thumbnail-vfl4t3-4R.jpg", "width": 480, "height": 360 }
+            },
+            "channelTitle": "Drew Loomer",
+            "localized": { "title": "Test", "description": "Testing123" }
+        },
+        "status": { "privacyStatus": "private" }
+    }
+}

@@ -7,9 +7,12 @@ export interface VideoIds {
 
 export interface AppContextModel {
     activeTrack?: number;
+    initializing?: boolean;
+    initialized?: boolean;
     playlist?: Tracks;
     videoIds?: VideoIds;
     videoPreviewId?: string;
+    initialize?: () => void;
     setContext?: (m: AppContextModel) => void;
 }
 

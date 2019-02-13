@@ -1,55 +1,67 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import YouTube from 'react-youtube';
 
-import AppContext, { AppContextModel, VideoIds } from './AppContext';
+import AppContext, { AppContextModel } from './AppContext';
 import Builder from '../Builder/Builder';
-import Uploader from '../shared/components/Uploader/Uploader';
+import GetStarted from '../GetStarted/GetStarted';
+import yt from '../YouTube/youtube.service';
+import UploadPlaylist from '../UploadPlaylist/UploadPlaylist';
 import { Track } from '../shared/models/track';
 
-const App = styled.div``;
+const App = styled.div`
+    align-items: center;
+    display: flex;
+    min-height: 100vh;
+    height: 100%;
+    justify-content: center;
+    width: 100%;
+`;
 
 export default class AppComponent extends Component<{}, AppContextModel> {
     constructor(props) {
         super(props);
         this.state = {
             activeTrack: 0,
+            initialize: this.initializeApi.bind(this),
+            // initialized: false,
+            initialized: true,
+            initializing: false,
+            // playlist: [],
             // @todo: remove this fixed data
             playlist: [
-                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track
-                // { album: 'The Life Pursuit', artist: 'Belle & Sebastian', name: 'Sukie In The Graveyard' } as Track
+                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track,
+                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track,
+                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track,
+                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track,
+                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track,
+                { album: 'The Life Pursuit', artist: 'Belle & Sebastian', name: 'Sukie In The Graveyard' } as Track
             ],
-            setContext: (m: AppContextModel) => this.setState({ ...this.state, ...m }),
+            setContext: (m: AppContextModel) => this.setState(s => ({ ...s, ...m })),
             videoIds: {},
             videoPreviewId: null
         };
+        setTimeout(() => this.initializeApi(), 1);
+    }
+
+    public async initializeApi() {
+        this.setState(s => ({ ...s, initializing: true }));
+        await yt.initialize();
+        this.setState(s => ({ ...s, initialized: true, initializing: false }));
     }
 
     public render() {
-        // When the upload is submitted, set the playlist data and create an empty playlist.
-        const onUploadSubmit = playlist =>
-            this.setState(s => ({
-                ...s,
-                playlist,
-                videoIds: playlist.reduce((acc: VideoIds, _: Track, i: number) => {
-                    acc[i] = null;
-                    return acc;
-                }, {})
-            }));
-
         return (
-            // @todo: add a YouTube login button to init the youtube service
             <AppContext.Provider value={this.state}>
-                <App>
-                    {/* @todo: expand this to allow for M3U files */}
-                    <Uploader label="Upload iTunes XML" onSubmit={onUploadSubmit} />
-                    <Builder />
-                    {/* @todo: put this preview into a panel */}
-                    {this.state.videoPreviewId && (
-                        <YouTube videoId={this.state.videoPreviewId} opts={{ playerVars: { autoplay: 1 } }} />
-                    )}
-                </App>
+                <App>{this.renderView()}</App>
             </AppContext.Provider>
         );
+    }
+
+    public renderView() {
+        const { initialized, playlist } = this.state;
+        // @todo: add header
+        if (!initialized) return <GetStarted />;
+        else if (!playlist.length) return <UploadPlaylist />;
+        return <Builder />;
     }
 }

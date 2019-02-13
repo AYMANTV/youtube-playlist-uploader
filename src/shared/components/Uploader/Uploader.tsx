@@ -22,6 +22,7 @@ export interface UploaderState {
 
 const Form = styled.form`
     border: none;
+    display: flex;
 `;
 
 export default class Uploader extends Component<UploaderProps, UploaderState> {
@@ -43,8 +44,8 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
             <Form className={classnames('uploader', className)} onSubmit={this.onSubmit}>
                 <Field label={label}>
                     <Input onChange={this.onInputChange} type={InputType.File} />
-                    <Button label="Upload" disabled={loading} type={ButtonType.Submit} />
                 </Field>
+                <Button label="Upload" disabled={loading} type={ButtonType.Submit} />
             </Form>
         );
     };
@@ -55,7 +56,7 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
             reader.onload = t => {
                 const result = reader.result as string;
                 res(result);
-                this.setState({ file: result });
+                this.setState(s => ({ ...s, file: result }));
             };
             reader.onerror = rej;
             reader.readAsText(file);
@@ -63,7 +64,7 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
     }
 
     public clearFile() {
-        this.setState({ file: null });
+        this.setState(s => ({ ...s, file: null }));
     }
 
     public async parsePlaylist(): Promise<Tracks> {
@@ -101,11 +102,19 @@ export default class Uploader extends Component<UploaderProps, UploaderState> {
     public async onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const { onSubmit } = this.props;
+        const { file } = this.state;
+
+        if (!file) {
+            alert('Please select an XML or M3U file.');
+            return;
+        }
+
         try {
             const playlist = await this.parsePlaylist();
             onSubmit(playlist);
         } catch (e) {
             console.error(e);
+            alert('There was an error reading the selected file.');
         }
     }
 }

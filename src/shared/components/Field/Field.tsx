@@ -16,7 +16,9 @@ const Field = styled.label`
 `;
 
 const Label = styled.span`
+    display: block;
     font-size: 2rem;
+    margin-bottom: 1rem;
 `;
 
 export default ({ children, label, className, ...p }: FieldProps) => (
