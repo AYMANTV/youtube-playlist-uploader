@@ -21,4 +21,7 @@ export interface AppContextModel {
     setVideoPreview?: (r: YTSearchResult) => void;
 }
 
-export default createContext({} as AppContextModel);
+export default createContext({
+    playlist: [],
+    videoIds: {}
+} as AppContextModel);
