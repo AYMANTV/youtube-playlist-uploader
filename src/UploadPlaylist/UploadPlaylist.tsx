@@ -19,17 +19,21 @@ export const UploadPlaylistComponent = (props: UploadPlaylistProps) => {
     );
 };
 
+const mapPlaylistToVideoIds = (tracks: Tracks): VideoIds => {
+    return tracks.reduce((acc: VideoIds, _: Track, i: number) => {
+        acc[i] = null;
+        return acc;
+    }, {});
+};
+
 export const mapContextToProps = (): UploadPlaylistProps => {
     const c = useContext(AppContext);
     return {
         setPlaylist: (playlist: Tracks) => {
-            c.setContext({
+            c.setContext(() => ({
                 playlist,
-                videoIds: playlist.reduce((acc: VideoIds, _: Track, i: number) => {
-                    acc[i] = null;
-                    return acc;
-                }, {})
-            });
+                videoIds: mapPlaylistToVideoIds(playlist)
+            }));
         }
     };
 };

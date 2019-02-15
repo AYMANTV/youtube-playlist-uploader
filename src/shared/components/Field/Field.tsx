@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import classnames from 'classnames';
 import styled from 'styled-components';
 
@@ -12,6 +12,7 @@ interface FieldProps {
 
 const Field = styled.label`
     border: none;
+    box-sizing: border-box;
     display: inline-block;
 `;
 
@@ -21,9 +22,9 @@ const Label = styled.span`
     margin-bottom: 1rem;
 `;
 
-export default ({ children, label, className, ...p }: FieldProps) => (
+export default styled(({ children, label, className, ...p }: FieldProps) => (
     <Field className={classnames('field', className)} {...p}>
         <Label>{label}</Label>
         {children}
     </Field>
-);
+))``;

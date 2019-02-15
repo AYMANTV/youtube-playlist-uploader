@@ -21,8 +21,13 @@ export interface UploaderState {
 }
 
 const Form = styled.form`
+    align-items: flex-end;
     border: none;
     display: flex;
+
+    ${Field} {
+        margin-right: 2rem;
+    }
 `;
 
 export default class Uploader extends Component<UploaderProps, UploaderState> {

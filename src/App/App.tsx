@@ -4,41 +4,37 @@ import styled from 'styled-components';
 import AppContext, { AppContextModel } from './AppContext';
 import Builder from '../Builder/Builder';
 import GetStarted from '../GetStarted/GetStarted';
-import yt from '../YouTube/youtube.service';
+import yt, { YTSearchResult } from '../YouTube/youtube.service';
 import UploadPlaylist from '../UploadPlaylist/UploadPlaylist';
-import { Track } from '../shared/models/track';
 
 const App = styled.div`
     align-items: center;
     display: flex;
-    min-height: 100vh;
+    flex-direction: column;
     height: 100%;
     justify-content: center;
+    min-height: 100vh;
     width: 100%;
 `;
 
 export default class AppComponent extends Component<{}, AppContextModel> {
     constructor(props) {
         super(props);
+        const setContext = (fn: (m: AppContextModel) => AppContextModel) => this.setState(s => ({ ...s, ...fn(s) }));
         this.state = {
             activeTrack: 0,
             initialize: this.initializeApi.bind(this),
-            // initialized: false,
-            initialized: true,
+            initialized: false,
             initializing: false,
-            // playlist: [],
-            // @todo: remove this fixed data
-            playlist: [
-                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track,
-                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track,
-                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track,
-                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track,
-                { album: 'Depression Cherry', artist: 'Beach House', name: 'Levitation' } as Track,
-                { album: 'The Life Pursuit', artist: 'Belle & Sebastian', name: 'Sukie In The Graveyard' } as Track
-            ],
-            setContext: (m: AppContextModel) => this.setState(s => ({ ...s, ...m })),
+            playlist: [],
+            setActiveTrack: (t: number) => setContext(() => ({ activeTrack: t })),
+            setContext,
+            setNextActiveTrack: () =>
+                setContext(c => ({ activeTrack: Math.min(c.activeTrack + 1, c.playlist.length - 1) })),
+            setTrackVideoId: (t: number, id: string) => setContext(c => ({ videoIds: { ...c.videoIds, [t]: id } })),
+            setVideoPreview: (r: YTSearchResult) => setContext(() => ({ videoPreview: r })),
             videoIds: {},
-            videoPreviewId: null
+            videoPreview: null
         };
         setTimeout(() => this.initializeApi(), 1);
     }
@@ -59,9 +55,9 @@ export default class AppComponent extends Component<{}, AppContextModel> {
 
     public renderView() {
         const { initialized, playlist } = this.state;
-        // @todo: add header
         if (!initialized) return <GetStarted />;
-        else if (!playlist.length) return <UploadPlaylist />;
+        // @todo: add header at this point
+        if (!playlist.length) return <UploadPlaylist />;
         return <Builder />;
     }
 }

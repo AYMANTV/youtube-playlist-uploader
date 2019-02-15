@@ -17,10 +17,10 @@ window.gapi = {
         init: () => new Promise(res => setTimeout(res, 250)), // Promise.resolve(),
         youtube: {
             playlistItems: {
-                insert: () => Promise.resolve(addTrack)
+                insert: () => ({ execute: cb => cb(addTrack) })
             },
             playlists: {
-                insert: () => Promise.resolve(create)
+                insert: () => ({ execute: cb => cb(create) })
             },
             search: {
                 list: () => Promise.resolve(search)

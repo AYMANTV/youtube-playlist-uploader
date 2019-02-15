@@ -1,4 +1,4 @@
-import './mock-gapi'; // remove this when you want to use the real GAPI
+// import './mock-gapi'; // remove this when you want to use the real GAPI
 
 // Client ID and API key from the Developer Console
 const CLIENT_ID = process.env.REACT_APP_YOUTUBE_CLIENT_ID;
@@ -51,7 +51,7 @@ export class YouTubeService {
 
     public async loadLibrary(): Promise<void> {
         return new Promise((res, rej) => {
-            return (this.api = gapi) && res(); // remove this when you want to use the real API
+            // return (this.api = gapi) && res(); // remove this when you want to use the real API
             const script = document.createElement('script');
             script.onload = () => {
                 this.api = gapi;
@@ -199,7 +199,7 @@ export class YouTubeService {
         title: string = '',
         description: string = '',
         privacyStatus: PrivacyStatus = PrivacyStatus.Private
-    ): Promise<void> {
+    ): Promise<string> {
         return new Promise(async (res, rej) => {
             try {
                 if (!this.initialized) {
@@ -211,7 +211,7 @@ export class YouTubeService {
 
                 const { id } = await this.createPlaylist(title, description, privacyStatus);
                 await this.addTracks(id, ids);
-                res();
+                res(id);
             } catch (e) {
                 rej(e);
             }

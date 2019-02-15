@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 import { Tracks } from '../shared/models/track';
+import { YTSearchResult } from '../YouTube/youtube.service';
 
 export interface VideoIds {
     [i: number]: string;
@@ -11,14 +12,13 @@ export interface AppContextModel {
     initialized?: boolean;
     playlist?: Tracks;
     videoIds?: VideoIds;
-    videoPreviewId?: string;
+    videoPreview?: YTSearchResult;
     initialize?: () => void;
-    setContext?: (m: AppContextModel) => void;
+    setActiveTrack?: (t: number) => void;
+    setContext?: (fn: (m: AppContextModel) => AppContextModel) => void;
+    setNextActiveTrack?: () => void;
+    setTrackVideoId?: (t: number, id: string) => void;
+    setVideoPreview?: (r: YTSearchResult) => void;
 }
 
-const defaultContext: AppContextModel = {
-    playlist: [],
-    videoIds: {}
-};
-
-export default createContext(defaultContext);
+export default createContext({} as AppContextModel);

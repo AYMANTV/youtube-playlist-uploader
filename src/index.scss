@@ -49,11 +49,19 @@ table {
 
 html {
     font-size: 8px;
-    line-height: 1;
+	line-height: 1;
+	min-height: 100%;
 }
 
 body {
-    font-family: Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    font-family: Helvetica, sans-serif;
+	min-height: 100vh;
+}
+
+#root {
+	flex: 1 1 100%;
 }
