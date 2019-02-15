@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
+import posed from 'react-pose';
 
 import AppContext from '../App/AppContext';
 import Button from '../shared/components/Button/Button';
@@ -12,7 +13,12 @@ export interface GetStartedProps {
     loading: boolean;
 }
 
-const GetStarted = styled.div`
+const GetStarted = styled(
+    posed.div({
+        enter: { opacity: 1 },
+        exit: { opacity: 2 }
+    })
+)`
     align-items: center;
     display: flex;
     flex-direction: column;

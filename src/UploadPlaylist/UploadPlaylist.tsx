@@ -1,4 +1,6 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext } from 'react';
+import styled from 'styled-components';
+import posed from 'react-pose';
 
 import AppContext, { VideoIds } from '../App/AppContext';
 import Uploader from '../shared/components/Uploader/Uploader';
@@ -8,14 +10,21 @@ export interface UploadPlaylistProps {
     setPlaylist: (playlist: Tracks) => void;
 }
 
+const UploadPlaylist = styled(
+    posed.div({
+        enter: { opacity: 1 },
+        exit: { opacity: 2 }
+    })
+)``;
+
 export const UploadPlaylistComponent = (props: UploadPlaylistProps) => {
     const { setPlaylist } = props;
 
     // @todo: expand this to allow for M3U files
     return (
-        <Fragment>
+        <UploadPlaylist>
             <Uploader label="Upload iTunes XML" onSubmit={setPlaylist} />;
-        </Fragment>
+        </UploadPlaylist>
     );
 };
 

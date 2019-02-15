@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
 import styled from 'styled-components';
+import posed, { PoseGroup } from 'react-pose';
 import yt, { YTSearchResult } from '../YouTube/youtube.service';
 import Button, { ButtonSize, ButtonKind } from '../shared/components/Button/Button';
 import { Track } from '../shared/models/track';
@@ -52,6 +53,16 @@ const BTrackItem = styled.li`
     }
 `;
 
+const BTrackList = styled(
+    posed.ul({
+        closed: { height: 0 },
+        open: { height: 'auto' }
+    })
+)`
+    margin-top: 1rem;
+    overflow: hidden;
+`;
+
 function useSearch(track: Track, isActive: boolean, defaultResults: YTSearchResult[] = []) {
     const [results, updateResults] = useState(defaultResults);
     const search = async (t: Track) => {
@@ -95,29 +106,28 @@ export const BuilderTrackComponent = (props: BuilderTrackProps) => {
                     {isComplete && <em>✓</em>}
                 </a>
             </h2>
-            <ul>
-                {isActive &&
-                    results.map(r => (
-                        <BTrackItem key={r.id} title={r.description}>
-                            <h3>{r.title}</h3>
-                            <nav>
-                                <Button
-                                    size={ButtonSize.Small}
-                                    active={videoPreview && videoPreview.id === r.id}
-                                    kind={ButtonKind.Secondary}
-                                    onClick={onPreviewClick(r)}
-                                    label="Preview"
-                                />
-                                <Button
-                                    size={ButtonSize.Small}
-                                    active={videoIds[index] === r.id}
-                                    onClick={onUseClick(r)}
-                                    label="Use"
-                                />
-                            </nav>
-                        </BTrackItem>
-                    ))}
-            </ul>
+            <BTrackList pose={isActive && results.length ? 'open' : 'closed'}>
+                {results.map(r => (
+                    <BTrackItem key={r.id} title={r.description}>
+                        <h3>{r.title}</h3>
+                        <nav>
+                            <Button
+                                size={ButtonSize.Small}
+                                active={videoPreview && videoPreview.id === r.id}
+                                kind={ButtonKind.Secondary}
+                                onClick={onPreviewClick(r)}
+                                label="Preview"
+                            />
+                            <Button
+                                size={ButtonSize.Small}
+                                active={videoIds[index] === r.id}
+                                onClick={onUseClick(r)}
+                                label="Use"
+                            />
+                        </nav>
+                    </BTrackItem>
+                ))}
+            </BTrackList>
         </div>
     );
 };
@@ -179,9 +189,5 @@ export default styled((p: BuilderTrackProps) => <BuilderTrackComponent {...mapCo
             font-size: 2rem;
             margin-left: 1rem;
         }
-    }
-
-    ul {
-        margin-top: 1rem;
     }
 `;
